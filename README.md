@@ -30,6 +30,6 @@ Error messages are used for validation feedback. They are defined in constants w
 Unit tests are implemented using NUnit to ensure the correctness of the validation logic. The tests cover various scenarios including valid and invalid card numbers, expired cards, and incorrect CVCs.
 
 
-Contributing
+## Contributing
 
 Feel free to submit issues or pull requests to improve the project. Please ensure your contributions adhere to the coding standards used in this project.
