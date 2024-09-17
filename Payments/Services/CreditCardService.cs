@@ -14,10 +14,10 @@ namespace Payments.Services
         public CreditCardValidationResult ValidateCreditCard(CreditCard card)
         {
             var errors = new List<string>();
-            CardType cardType = CardType.Unknown;
+            CardType cardType = GetCardType(card.Number);
 
             ValidateCardOwner(card.CardOwner, errors);
-            ValidateCardNumber(card.Number, out cardType, errors);
+            ValidateCardNumber(card.Number, cardType, errors);
             ValidateCardCVC(card.CVC, cardType, errors);
             ValidateExpiryDate(card.ExpiryDate, errors);
 
@@ -29,23 +29,8 @@ namespace Payments.Services
             };
         }
 
-        private void ValidateCardNumber(string cardNumber, out CardType cardType, List<string> errors)
+        private CardType GetCardType(string cardNumber)
         {
-            cardType = CardType.Unknown;
-
-            if (FieldIsNullOrEmpty(cardNumber, "Card number", errors))
-                return;
-
-            if (!ValidateCardNumberType(cardNumber, out cardType))
-            {
-                errors.Add("Invalid card number.");
-            }
-        }
-
-        private bool ValidateCardNumberType(string cardNumber, out CardType cardType)
-        {
-            cardType = CardType.Unknown;
-
             var cardPatterns = new Dictionary<CardType, string>
             {
                 { CardType.Visa, VisaPattern },
@@ -57,12 +42,22 @@ namespace Payments.Services
             {
                 if (Regex.IsMatch(cardNumber, pattern.Value))
                 {
-                    cardType = pattern.Key;
-                    return true;
+                    return pattern.Key;
                 }
             }
 
-            return false;
+            return CardType.Unknown;
+        }
+
+        private void ValidateCardNumber(string cardNumber, CardType cardType, List<string> errors)
+        {
+            if (FieldIsNullOrEmpty(cardNumber, "Card number", errors))
+                return;
+
+            if (cardType == CardType.Unknown)
+            {
+                errors.Add("Invalid card number.");
+            }
         }
 
         private void ValidateCardCVC(string cardCvc, CardType cardType, List<string> errors)
