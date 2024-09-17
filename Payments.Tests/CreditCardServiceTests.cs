@@ -15,39 +15,23 @@ namespace Payments.Tests
             _creditCardService = new CreditCardService();
         }
 
-        [Test]
-        public void ValidateCreditCard_ValidVisa_ReturnsValid()
+        [TestCase("4111111111111111", CardType.Visa, TestName = "ValidateCreditCard_ValidVisa_ReturnsValid")]
+        [TestCase("5111111111111111", CardType.MasterCard, TestName = "ValidateCreditCard_ValidMasterCard_ReturnsValid")]
+        [TestCase("371449635398431", CardType.AmericanExpress, TestName = "ValidateCreditCard_ValidAmericanExpress_ReturnsValid")]
+        public void ValidateCreditCard_ValidCard_ReturnsValid(string cardNumber, CardType expectedCardType)
         {
             var validCard = new CreditCard
             {
                 CardOwner = "John Doe",
-                Number = "4111111111111111", // Visa
+                Number = cardNumber,
                 ExpiryDate = "12/25",
-                CVC = "123"
+                CVC = expectedCardType == CardType.AmericanExpress ? "1234" : "123" // Adjust CVC based on card type
             };
 
             var result = _creditCardService.ValidateCreditCard(validCard);
 
             Assert.IsTrue(result.IsValid);
-            Assert.AreEqual(CardType.Visa, result.CardType);
-            Assert.IsEmpty(result.Errors);
-        }
-
-        [Test]
-        public void ValidateCreditCard_ValidMasterCard_ReturnsValid()
-        {
-            var validCard = new CreditCard
-            {
-                CardOwner = "John Doe",
-                Number = "5111111111111111", // MasterCard
-                ExpiryDate = "12/25",
-                CVC = "123"
-            };
-
-            var result = _creditCardService.ValidateCreditCard(validCard);
-
-            Assert.IsTrue(result.IsValid);
-            Assert.AreEqual(CardType.MasterCard, result.CardType);
+            Assert.AreEqual(expectedCardType, result.CardType);
             Assert.IsEmpty(result.Errors);
         }
 
