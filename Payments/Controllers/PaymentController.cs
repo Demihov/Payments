@@ -24,10 +24,7 @@ namespace Payments.Controllers
                 {
                     return Ok(result.CardType.ToString());
                 }
-                else
-                {
-                    return BadRequest(result.Errors);
-                }
+                return BadRequest(result.Errors);
             }
         }
     }
