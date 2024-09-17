@@ -116,7 +116,7 @@ namespace Payments.Tests
             var result = _creditCardService.ValidateCreditCard(cardWithEmptyOwner);
 
             Assert.IsFalse(result.IsValid);
-            Assert.Contains(ValidationMessages.CardOwnerRequired, result.Errors);
+            Assert.Contains("Card owner is required.", result.Errors);
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace Payments.Tests
 
             // Assert
             Assert.IsFalse(result.IsValid);
-            Assert.Contains(ValidationMessages.ExpiryDateRequired, result.Errors);
+            Assert.Contains("Card expiration date is required.", result.Errors);
         }
         
         [Test]

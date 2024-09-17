@@ -56,7 +56,7 @@ namespace Payments.Services
 
             if (cardType == CardType.Unknown)
             {
-                errors.Add("Invalid card number.");
+                errors.Add(ValidationMessages.InvalidCardNumber);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Payments.Services
 
             if (!ValidateCVC(cardCvc, cardType))
             {
-                errors.Add("Invalid CVC.");
+                errors.Add(ValidationMessages.InvalidCVC);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Payments.Services
 
             if (!Regex.IsMatch(cardOwner, CardOwnerPattern))
             {
-                errors.Add("Card owner field should contain only letters.");
+                errors.Add(ValidationMessages.CardOwnerInvalid);
             }
         }
 
@@ -115,12 +115,12 @@ namespace Payments.Services
 
                 if (expiryYear < currentYear || (expiryYear == currentYear && month < currentMonth))
                 {
-                    errors.Add("Card has expired.");
+                    errors.Add(ValidationMessages.CardExpired);
                 }
             }
             else
             {
-                errors.Add("Invalid card expiration date.");
+                errors.Add(ValidationMessages.InvalidExpiryDate);
             }
         }
 
